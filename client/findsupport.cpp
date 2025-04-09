@@ -143,7 +143,7 @@ void TaskSearch::run()
   if (mRequest.startsWith("\"") && mRequest.endsWith("\""))
     sl.append(mRequest);
   else
-   sl = mRequest.split(" ", QString::SkipEmptyParts);
+   sl = mRequest.split(" ", Qt::SkipEmptyParts);
 
   if (!sl.empty())
   {

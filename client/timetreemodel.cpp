@@ -275,7 +275,7 @@ int TimeTreeModel::columnCount(const QModelIndex &parent) const
 
 static QString monthToString(int month)
 {
-    return QDate::longMonthName(month);
+    return QLocale::system().monthName(month);
 }
 
 QVariant TimeTreeModel::data(const QModelIndex &index, int role) const

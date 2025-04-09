@@ -187,5 +187,5 @@ void IV::Generate(QByteArray &buffer)
 {
   uint8_t* data = (uint8_t*)buffer.data();
   for (int i=0; i<buffer.length(); i++)
-    data[i] = qrand() % 256;
+    data[i] = rand() % 256;
 }

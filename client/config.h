@@ -39,7 +39,7 @@
 
 #define APP_VERSION_MAJOR 0
 #define APP_VERSION_MINOR 9
-#define APP_VERSION_SUFFIX 6
+#define APP_VERSION_SUFFIX 8
 
 //#ifdef TARGET_OSX
 #define ICONS                   ":/assets/images"

@@ -37,7 +37,7 @@
 # include "platforms/linux/autostart.h"
 #endif
 
-#include <QDesktopWidget>
+// #include <QDesktopWidget>
 #include <QDebug>
 #include <iostream>
 
@@ -121,7 +121,7 @@ void MainWindow::connectUiToDatabase()
 
     // Load recent tasks
     QString recent = SETTINGS.data()[KEY_RECENT_TASKS].toString();
-    QStringList recentList = recent.split(";", QString::SkipEmptyParts);
+    QStringList recentList = recent.split(";", Qt::SkipEmptyParts);
     for (QString& s: recentList)
     {
         Task::Id id = s.toULongLong();
@@ -1016,7 +1016,7 @@ void MainWindow::updateData()
 
         if (saveToDb)
             mLogger->log("Flushing timeline to DB start");
-        mCurrentTask->timeline()->flush(saveToDb, QDateTime::currentDateTimeUtc().toTime_t());
+        mCurrentTask->timeline()->flush(saveToDb, QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
         if (saveToDb)
         {
             mLastTimelineFlush = QDateTime::currentDateTimeUtc();
@@ -1191,9 +1191,9 @@ int MainWindow::showTrayWindow(QDialog* dlg)
 
     int w = dlg->geometry().width();
     int h = dlg->geometry().height();
-    QRect rec = QApplication::desktop()->screenGeometry();
-    int desktopHeight = rec.height();
-    int desktopWidth = rec.width();
+    auto screen_size = QGuiApplication::primaryScreen()->size();
+    int desktopHeight = screen_size.height();
+    int desktopWidth = screen_size.width();
 
     QRect iconRect;
     if (mTrayIcon)
@@ -1412,7 +1412,7 @@ void MainWindow::checkForUpdates()
 void MainWindow::systemSleep()
 {
     //qDebug() << "System goes to sleep";
-    stopTracking(TSR_Automatic, QDateTime::currentDateTimeUtc().toTime_t());
+    stopTracking(TSR_Automatic, QDateTime::currentDateTimeUtc().toSecsSinceEpoch());
 }
 
 void MainWindow::systemResume()
@@ -1484,11 +1484,11 @@ void MainWindow::findRequested()
     }
 
     //ui->mFindEdit->setVisible(false);
-    QTextCursor c = ui->mNoteEdit->document()->find(pattern, mFindStartIndex, nullptr);
+    QTextCursor c = ui->mNoteEdit->document()->find(pattern, mFindStartIndex);
     if (c.isNull())
     {
         mFindStartIndex = 0;
-        c = ui->mNoteEdit->document()->find(pattern, mFindStartIndex, nullptr);
+        c = ui->mNoteEdit->document()->find(pattern, mFindStartIndex);
     }
     if (!c.isNull())
     {
@@ -1575,7 +1575,7 @@ void MainWindow::continueOnIdle()
 void MainWindow::breakOnIdle(const QDateTime& stopTime)
 {
     // Stop tracking
-    stopTracking(TSR_Manual, stopTime.toUTC().toTime_t());
+    stopTracking(TSR_Manual, stopTime.toUTC().toSecsSinceEpoch());
     showTimeForSelectedTask();
 }
 

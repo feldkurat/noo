@@ -47,7 +47,9 @@ QDateTime TimeIntervalDlg::finishDate()
 void TimeIntervalDlg::accept()
 {
   // Insert interval
-  mModel->insertInterval(TimeRecord(startDate().toUTC().toTime_t(), finishDate().toUTC().toTime_t(), mTimeline->taskId()));
+  mModel->insertInterval(TimeRecord(startDate().toUTC().toSecsSinceEpoch(),
+                                    finishDate().toUTC().toSecsSinceEpoch(),
+                                    mTimeline->taskId()));
   emit accepted();
   close();
 }
@@ -68,7 +70,9 @@ void TimeIntervalDlg::closeEvent(QCloseEvent *event)
 bool TimeIntervalDlg::validate()
 {
   assert(mTimeline);
-  return !mTimeline->hasIntersection(TimeRecord(startDate().toUTC().toTime_t(), finishDate().toUTC().toTime_t(), mTimeline->taskId()));
+  return !mTimeline->hasIntersection(TimeRecord(startDate().toUTC().toSecsSinceEpoch(),
+                                                finishDate().toUTC().toSecsSinceEpoch(),
+                                                mTimeline->taskId()));
 }
 
 void TimeIntervalDlg::dataChanged(const QDateTime& changed)

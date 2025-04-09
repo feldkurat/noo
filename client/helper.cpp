@@ -9,6 +9,8 @@
 #include <QKeyEvent>
 #include <QTextStream>
 #include <QApplication>
+#include <QStandardPaths>
+#include <QFile>
 #include <sstream>
 
 
@@ -208,22 +210,14 @@ time_t chrono::strToTime(const std::string& s)
 
 QString path::pathToSettings()
 {
-#if QT_VERSION >= 0x050000
-    QString folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#else
-    QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#endif
+    QString folder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QString path = folder + "/" + SETTINGS_FILENAME;
     return path;
 }
 
 QString path::pathToDatabase()
 {
-#if QT_VERSION >= 0x050000
-    QString folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#else
-    QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#endif
+    QString folder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     QString path = folder + "/" + DATABASENAME;
     return path;
 }
@@ -255,11 +249,7 @@ QString path::pathToDatabaseTemplate()
 
 QString path::pathToLog()
 {
-#if QT_VERSION >= 0x050000
-    QString folder = QStandardPaths::writableLocation(QStandardPaths::DataLocation);
-#else
-    QString folder = QDesktopServices::storageLocation(QDesktopServices::DataLocation);
-#endif
+    QString folder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
     return folder + "/" + LOGNAME;
 }
 

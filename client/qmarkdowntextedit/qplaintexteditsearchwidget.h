@@ -1,51 +1,73 @@
 /*
- * Copyright (c) 2014-2019 Patrizio Bekerle -- http://www.bekerle.com
+ * MIT License
  *
- * This program is free software; you can redistribute it and/or modify
- * it under the terms of the GNU General Public License as published by
- * the Free Software Foundation; version 2 of the License.
+ * Copyright (c) 2014-2025 Patrizio Bekerle -- <patrizio@bekerle.com>
  *
- * This program is distributed in the hope that it will be useful, but
- * WITHOUT ANY WARRANTY; without even the implied warranty of MERCHANTABILITY
- * or FITNESS FOR A PARTICULAR PURPOSE. See the GNU General Public License
- * for more details.
+ * Permission is hereby granted, free of charge, to any person obtaining a copy
+ * of this software and associated documentation files (the "Software"), to deal
+ * in the Software without restriction, including without limitation the rights
+ * to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ * copies of the Software, and to permit persons to whom the Software is
+ * furnished to do so, subject to the following conditions:
  *
+ * The above copyright notice and this permission notice shall be included in
+ * all copies or substantial portions of the Software.
+ *
+ * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ * IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ * FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ * AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ * LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ * OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ * SOFTWARE.
  */
 
 #pragma once
 
-#include <QWidget>
 #include <QPlainTextEdit>
+#include <QTimer>
+#include <QWidget>
 
 namespace Ui {
 class QPlainTextEditSearchWidget;
 }
 
-class QPlainTextEditSearchWidget : public QWidget
-{
+class QPlainTextEditSearchWidget : public QWidget {
     Q_OBJECT
 
-public:
-    enum SearchMode {
-        PlainTextMode,
-        WholeWordsMode,
-        RegularExpressionMode
-    };
+   public:
+    enum SearchMode { PlainTextMode, WholeWordsMode, RegularExpressionMode };
 
-    explicit QPlainTextEditSearchWidget(QPlainTextEdit *parent = 0);
-    bool doSearch(bool searchDown = true, bool allowRestartAtTop = true);
+    explicit QPlainTextEditSearchWidget(QPlainTextEdit *parent = nullptr);
+    bool doSearch(bool searchDown = true, bool allowRestartAtTop = true,
+                  bool updateUI = true);
     void setDarkMode(bool enabled);
     ~QPlainTextEditSearchWidget();
 
-private:
-    Ui::QPlainTextEditSearchWidget *ui;
+    void setSearchText(const QString &searchText);
+    void setSearchMode(SearchMode searchMode);
+    void setDebounceDelay(uint debounceDelay);
+    void activate(bool focus);
+    void clearSearchExtraSelections();
+    void updateSearchExtraSelections();
 
-protected:
+   private:
+    Ui::QPlainTextEditSearchWidget *ui;
+    int _searchResultCount;
+    int _currentSearchResult;
+    QList<QTextEdit::ExtraSelection> _searchExtraSelections;
+    QColor selectionColor;
+    QTimer _debounceTimer;
+    QString _searchTerm;
+    void setSearchExtraSelections() const;
+    void stopDebounce();
+
+   protected:
     QPlainTextEdit *_textEdit;
     bool _darkMode;
-    bool eventFilter(QObject *obj, QEvent *event);
+    bool eventFilter(QObject *obj, QEvent *event) override;
 
-public slots:
+   public Q_SLOTS:
     void activate();
     void deactivate();
     void doSearchDown();
@@ -54,7 +76,15 @@ public slots:
     void activateReplace();
     bool doReplace(bool forAll = false);
     void doReplaceAll();
+    void reset();
+    void doSearchCount();
 
-protected slots:
+   protected Q_SLOTS:
     void searchLineEditTextChanged(const QString &arg1);
+    void performSearch();
+    void updateSearchCountLabelText();
+    void setSearchSelectionColor(const QColor &color);
+   private Q_SLOTS:
+    void on_modeComboBox_currentIndexChanged(int index);
+    void on_matchCaseSensitiveButton_toggled(bool checked);
 };
