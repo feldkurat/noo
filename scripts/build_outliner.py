@@ -63,7 +63,7 @@ if platform.system() == 'Linux':
     # retcode = os.system(f'{cmake_cmd} ../../client')
     retcode = os.system(f'{qt_home}/bin/qmake ../../client')
     if retcode != 0:
-        print(f'cmake call failed with code {retcode}')
+        print(f'qmake call failed with code {retcode}')
         exit(retcode)
 
     print('Build...')
@@ -114,4 +114,64 @@ if platform.system() == 'Linux':
         if f.endswith('x86_64.AppImage') and f.startswith('Noo'):
             shutil.move(f, releases_dir / f'noo-{app_version}-x86_64.AppImage')
             
-    exit(0)
+elif platform.system() == 'Windows':
+    print('Windows detected')
+    print('Configure...')
+
+    qt_home = Path(os.environ['QT_HOME']).resolve()
+    if len(str(qt_home)) == 0:
+        raise RuntimeError('Qt not found')
+    
+    retcode = os.system(f'{qt_home}/bin/qmake ../../client')
+    if retcode != 0:
+        print(f'qmake call failed with code {retcode}')
+        exit(retcode)
+
+    # print('Build...')
+    # retcode = os.system('make -j4')
+    # if retcode != 0:
+    #    print(f'make call failed with code {retcode}')
+    #    exit(retcode)
+
+    # Build appimage
+    # print('Assembling app...')
+    # os.chdir('..')
+
+    # Remove possible old image
+    # if os.path.exists('appimage_dir'):
+    #    shutil.rmtree('appimage_dir')
+    
+    # Expand image template
+    #retcode = os.system('tar -xvzf appimage_dir.tar.gz')
+    #if retcode != 0:
+    #    print(f'Failed to expand template directory, code {retcode}')
+    #    exit(retcode)
+
+    # Copy binary file
+    # shutil.copy('build/noo', 'appimage_dir/usr/bin')
+
+    # deploy_options = [
+    #     '-always-overwrite', 
+    #     '-verbose=2', 
+    #     '-appimage', 
+    #     '-qmake=' + os.environ['QT_HOME'] + '/bin/qmake', 
+    #     '-unsupported-allow-new-glibc', 
+    #     #'-no-translations', 
+    #     '-extra-plugins=iconengines,platformthemes/libqgtk3.so'
+    # ]
+
+    # desktop_path = 'appimage_dir/usr/share/applications/noo.desktop'
+    # cmd_deploy = f'./linuxdeployqt {desktop_path} {" ".join(deploy_options)}'
+    # retcode = os.system(cmd_deploy)
+    # if retcode != 0:
+    #     print(f'linuxdeployqt failed with code {retcode}')
+    #     print(cmd_deploy)
+    #     exit(retcode)
+
+    # releases_dir = Path('releases')
+    # if not releases_dir.exists():
+    #     os.mkdir(releases_dir)
+    # for f in os.listdir():
+    #     if f.endswith('x86_64.AppImage') and f.startswith('Noo'):
+    #         shutil.move(f, releases_dir / f'noo-{app_version}-x86_64.AppImage')
+    
