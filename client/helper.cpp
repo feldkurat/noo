@@ -41,7 +41,7 @@ void theme::applyCurrent(Settings& settings)
     // Dark theme
     if (settings.data()[KEY_DARK_THEME].toBool())
     {
-        QFile f(":/assets/qdarkstyle/style.qss");
+        QFile f(":/assets/qdarkstyle/darkstyle.qss");
         if (f.exists())
         {
             f.open(QFile::ReadOnly | QFile::Text);
@@ -50,7 +50,15 @@ void theme::applyCurrent(Settings& settings)
         }
     }
     else
-        qApp->setStyleSheet("");
+    {
+        QFile f(":/assets/qdarkstyle/lightstyle.qss");
+        if (f.exists())
+        {
+            f.open(QFile::ReadOnly | QFile::Text);
+            QTextStream ts(&f);
+            qApp->setStyleSheet(ts.readAll());
+        }
+    }
 }
 
 date::date()
@@ -200,6 +208,33 @@ std::string chrono::timeToLocalStr(time_t timestamp)
 }
 */
 
+#if defined(TARGET_WIN)
+#include <time.h>
+#include <iomanip>
+#include <sstream>
+
+extern "C" char* strptime(const char* s,
+                          const char* f,
+                          struct tm* tm) {
+    // Isn't the C++ standard lib nice? std::get_time is defined such that its
+    // format parameters are the exact same as strptime. Of course, we have to
+    // create a string stream first, and imbue it with the current C locale, and
+    // we also have to make sure we return the right things if it fails, or
+    // if it succeeds, but this is still far simpler an implementation than any
+    // of the versions in any of the C standard libraries.
+    std::istringstream input(s);
+    input.imbue(std::locale(setlocale(LC_ALL, nullptr)));
+    input >> std::get_time(tm, "%Y-%m-%dT%H:%M:%SZ");
+    if (input.fail()) {
+        return nullptr;
+    }
+    return (char*)(s + input.tellg());
+}
+
+#define timegm _mkgmtime
+
+#endif
+
 time_t chrono::strToTime(const std::string& s)
 {
     struct tm t;
@@ -210,7 +245,7 @@ time_t chrono::strToTime(const std::string& s)
 
 QString path::pathToSettings()
 {
-    QString folder = QStandardPaths::writableLocation(QStandardPaths::DocumentsLocation);
+    QString folder = QStandardPaths::writableLocation(QStandardPaths::AppConfigLocation);
     QString path = folder + "/" + SETTINGS_FILENAME;
     return path;
 }

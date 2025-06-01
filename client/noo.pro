@@ -17,6 +17,8 @@ VERSION = 0.9.4
 
 win32 {
     DEFINES += TARGET_WIN
+    LIBS += $$PWD/../lib/openssl/win64/ssleay32.lib $$PWD/../lib/openssl/win64/libeay32.lib gdi32.lib user32.lib
+    ICON = icons/app/noo_128x128.png
 }
 
 macx {
@@ -166,7 +168,8 @@ FORMS    += mainwindow.ui       \
     openorcreatedb_widget.ui    \
     connectdb_widget.ui
 
-RESOURCES = mainwindow.qrc assets/qdarkstyle/dark/style.qrc
+RESOURCES = mainwindow.qrc assets/qdarkstyle/dark/darkstyle.qrc
+                           assets/qdarkstyle/dark/lightstyle.qrc
 
 macx {
     OBJECTIVE_SOURCES +=                        \

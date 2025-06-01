@@ -1208,7 +1208,7 @@ int MainWindow::showTrayWindow(QDialog* dlg)
     QRect windowRect(desktopWidth - w - 10, iconRect.bottom() + 10, w, h);
 #endif
 #ifdef TARGET_WIN
-
+    QRect windowRect(desktopWidth - w - 10, iconRect.bottom() + 10, w, h);
 #endif
     dlg->setGeometry(windowRect);
     dlg->setVisible(true);

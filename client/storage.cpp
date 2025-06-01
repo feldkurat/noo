@@ -104,6 +104,9 @@ SQLite::Database& Storage::database()
 
 bool Storage::create()
 {
+    if (mPath.isEmpty())
+        return false;
+
     assert(!mPath.isEmpty());
     try
     {
