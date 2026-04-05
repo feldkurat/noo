@@ -65,6 +65,7 @@ set (SOURCES
     logger.cpp
     main.cpp
     mainwindow.cpp
+    obsidianexport.cpp
     newpassworddlg.cpp
     openorcreatedb_widget.cpp
     passworddlg.cpp
@@ -105,6 +106,7 @@ set (HEADERS
     # initial_ui.h
     logger.h
     mainwindow.h
+    obsidianexport.h
     #moc_predefs.h
     newpassworddlg.h
     openorcreatedb_widget.h

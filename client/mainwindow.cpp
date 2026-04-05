@@ -28,6 +28,8 @@
 #endif
 #include "taskaction.h"
 #include "finddialog.h"
+#include "obsidianexport.h"
+#include <QFileDialog>
 #include "startworkdialog.h"
 #include "stopworkdialog.h"
 #include "connectdb_widget.h"
@@ -1089,6 +1091,29 @@ void MainWindow::print()
         return;
 
     document->print(&printer);
+}
+
+void MainWindow::exportToObsidian()
+{
+    QString dir = QFileDialog::getExistingDirectory(this, tr("Export to Obsidian — Select Directory"),
+                                                    QDir::homePath(),
+                                                    QFileDialog::ShowDirsOnly);
+    if (dir.isEmpty())
+        return;
+
+    // Save current task before export
+    save();
+
+    ObsidianExporter exporter;
+    if (exporter.exportToDirectory(dir))
+    {
+        QMessageBox::information(this, tr("Export Complete"),
+                                 tr("Database exported to Obsidian format successfully."));
+    }
+    else
+    {
+        QMessageBox::warning(this, tr("Export Failed"), exporter.lastError());
+    }
 }
 
 void MainWindow::editSelectionChanged()

@@ -91,6 +91,7 @@ SOURCES += main.cpp                 \
     openorcreatedb_widget.cpp       \
     connectdb_widget.cpp            \
     runguard.cpp                    \
+    obsidianexport.cpp              \
 
 
 HEADERS  += mainwindow.h            \
@@ -136,7 +137,8 @@ HEADERS  += mainwindow.h            \
     twofish.h                                   \
     openorcreatedb_widget.h                     \
     connectdb_widget.h                          \
-    runguard.h
+    runguard.h                                  \
+    obsidianexport.h
 
 macx {
     HEADERS += platforms/osx/hidtrackerimpl_osx.h

@@ -213,6 +213,8 @@
     <addaction name="separator"/>
     <addaction name="mPreferencesAction"/>
     <addaction name="mPrintAction"/>
+    <addaction name="separator"/>
+    <addaction name="mExportObsidianAction"/>
     <addaction name="mExitAction"/>
    </widget>
    <widget class="QMenu" name="mEditMenu">
@@ -323,6 +325,11 @@
   <action name="mExitAction">
    <property name="text">
     <string>E&amp;xit</string>
+   </property>
+  </action>
+  <action name="mExportObsidianAction">
+   <property name="text">
+    <string>Export to &amp;Obsidian...</string>
    </property>
   </action>
   <action name="mPreferencesAction">
@@ -1247,6 +1254,22 @@
     </hint>
    </hints>
   </connection>
+  <connection>
+   <sender>mExportObsidianAction</sender>
+   <signal>triggered()</signal>
+   <receiver>MainWindow</receiver>
+   <slot>exportToObsidian()</slot>
+   <hints>
+    <hint type="sourcelabel">
+     <x>-1</x>
+     <y>-1</y>
+    </hint>
+    <hint type="destinationlabel">
+     <x>323</x>
+     <y>253</y>
+    </hint>
+   </hints>
+  </connection>
  </connections>
  <slots>
   <slot>save()</slot>
@@ -1285,5 +1308,6 @@
   <slot>newSibling()</slot>
   <slot>moveUp()</slot>
   <slot>moveDown()</slot>
+  <slot>exportToObsidian()</slot>
  </slots>
 </ui>

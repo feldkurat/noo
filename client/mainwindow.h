@@ -211,6 +211,7 @@ public slots:
     void toolbarVisibilityChanged(bool visible);
     void showHideToolbar();
     void showAttachments();
+    void exportToObsidian();
     void checkForUpdates();
     void systemSleep();
     void systemResume();
